@@ -2,11 +2,17 @@ package com.thoughtworks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class App {
 
   public static void main(String[] args) {
+    Scanner scan = new Scanner(System.in);
+    System.out.println("请点餐（菜品Id x 数量，用逗号隔开）：");
+    String selectedItems = scan.nextLine();
+    String summary = bestCharge(selectedItems);
+    System.out.println(summary);
 
   }
 
@@ -44,16 +50,19 @@ public class App {
     StringBuilder builder = new StringBuilder();
     builder.append("-----------------------------------\n");
     if (result.getType().equals("无")) {
+      builder.append(String.format("总计：%s元\n", (int) result.getTotal()));
+      builder.append("===================================");
+    } else {
       builder.append("使用优惠:\n");
       double save = result.getOriginal() - result.getTotal();
       String dishStr = result.getRelatedDishes().stream().map(Dish::getName)
-          .collect(Collectors.joining("，"));
+              .collect(Collectors.joining("，"));
       String dishInfo = dishStr.isEmpty() ? "" : String.format("(%s)", dishStr);
       builder.append(String.format("%s%s，省%s元\n", result.getType(), dishInfo, (int) save));
       builder.append("-----------------------------------\n");
+      builder.append(String.format("总计：%s元\n", (int) result.getTotal()));
+      builder.append("===================================");
     }
-    builder.append(String.format("总计：%s元\n", (int) result.getTotal()));
-    builder.append("===================================");
     return builder.toString();
   }
 
